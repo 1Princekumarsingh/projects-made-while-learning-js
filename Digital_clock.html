@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Js Clock Project</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgb(4, 38, 63);
+            color: rgb(30, 92, 130);
+            font-family: 'Poppins', sans-serif;
+        }
+        body::-webkit-scrollbar{
+            display: none;
+        }
+        .clock-container{
+            text-align: center;
+            font-size: 40px;
+            padding: 40px 60px;
+            box-shadow: 0 0 25px rgb(0, 0, 0);
+            border-radius: 10px;
+            background-color: rgb(215, 213, 213);
+        }
+        #clock{
+            text-shadow: 0 0 10px rgba(34, 10, 10, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <h1 id="clock"></h1>
+    </div>
+    <script>
+        const currentTime = () => {
+            let currTime = new Date().toLocaleTimeString();
+            document.getElementById("clock").innerText = currTime;
+        }
+
+        currentTime(); // show instantly
+        const intervalId = setInterval(currentTime, 1000);
+
+        // Optional: stop after 5 seconds
+        // setTimeout(() => {
+        //     clearInterval(intervalId);
+        // }, 5000);
+    </script>
+</body>
+</html>

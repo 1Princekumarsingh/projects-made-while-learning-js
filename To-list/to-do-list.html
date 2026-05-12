@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo</title>
+    <link rel="stylesheet" href="to-do-list.css">
+</head>
+<body>
+    <h1>Todo List</h1><br>
+    <form>
+        <div>
+            <input type="text" id='inputValue'/>
+            <button class="btn">Add Todo</button>
+        </div>
+        <section class="todo-lists-elem">
+        </section>
+    </form>
+    <script>
+        //1. dom selectors -> access HTML elements
+        const mainTodoElem = document.querySelector(".todo-lists-elem");
+        const inputValue = document.querySelector("#inputValue");
+        const btn1= document.querySelector(".btn");
+
+        //2. storage function ->  handle local storage
+        const getTodoListFromLocal = () =>{
+            const todos = JSON.parse(localStorage.getItem("TodoList"));
+            return todos? todos : [];
+            // return JSON.parse(localStorage.getItem("TodoList")) || [];
+        }
+        //3. state -> store application data
+        let localTodoLists = getTodoListFromLocal();
+
+        //4. ui render functions -> update ui
+        const addTodoDynamicElemnt = (curElem) =>{
+            const divElement = document.createElement("div");
+            divElement.classList.add("main_todo_div");
+            divElement.innerHTML = `<li>${curElem}</li><button class="deleteBtn">Delete</button>`;
+            mainTodoElem.append(divElement);
+        }
+
+        const showToDoList = () =>{
+            localTodoLists.forEach((curElem) => {
+                addTodoDynamicElemnt(curElem);
+            });
+
+        }
+
+        //5. event handlers -> User interactions
+        const addTodoList = (e) => {
+            e.preventDefault(); //prevent form default behaviour, i.e reload the page
+            const todoListValue = inputValue.value.trim();
+
+            inputValue.value = ""; // remove the input from input field
+            if(todoListValue === "") return; // avoid empty input
+            if(localTodoLists.includes(todoListValue)) return; //already exist
+
+            localTodoLists.push(todoListValue);
+            localStorage.setItem('TodoList', JSON.stringify(localTodoLists))
+
+            addTodoDynamicElemnt(todoListValue);
+        }
+
+        const removeTodoElem = (e) =>{
+            e.preventDefault(); //prevent form default behaviour
+
+            if(!e.target.classList.contains("deleteBtn")) return;
+
+            const todoDiv = e.target.closest(".main_todo_div") //climb ladder to find parent
+            const todoText = todoDiv.querySelector("li").innerText;
+
+            localTodoLists = localTodoLists.filter((curTodo) => curTodo !== todoText);//remove from array
+
+            localStorage.setItem("TodoList", JSON.stringify(localTodoLists)); // update localStorage
+ 
+            todoDiv.remove(); // remove from UI
+        }
+        //6. initialization -> load app data
+        showToDoList();
+
+        // event listerners -> Connect UI to logic
+        mainTodoElem.addEventListener("click", removeTodoElem);
+        btn1.addEventListener("click", (e) =>{
+            addTodoList(e);
+        }) 
+
+    </script>
+</body>
+</html>
